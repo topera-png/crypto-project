@@ -1,8 +1,10 @@
+import { Link } from "react-router"
 import { formatMarketCap, formatPrice } from "../utils/formatter"
 
 export const CryptoCard = ({crypto}) => {
 
     return (
+    <Link to={`/coin/${crypto.id}`} style={{textDecoration: "none"}}>
         <div className="crypto-card">
             <div className="crypto-header">
                 <div className="crypto-info">
@@ -21,7 +23,7 @@ export const CryptoCard = ({crypto}) => {
                 </p>
                 
                 <p className={`change ${crypto.price_change_percentage_24h >=0 ? "positive" : "negative"}`}>
-                    {Math.abs(crypto.price_change_percentage_24h).toFixed(2)}
+                    {Math.abs(crypto.price_change_percentage_24h).toFixed(2)}%
                 </p>
             </div>
             <div className="crypto-stats">
@@ -40,5 +42,6 @@ export const CryptoCard = ({crypto}) => {
                 </div>
             </div>
         </div>
+    </Link>
     )
 }
