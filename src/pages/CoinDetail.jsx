@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams,  } from "react-router-dom"
 import { fetchChartData, fetchCoinData } from "../services/CoinGecko"
-import { formatPrice } from "../utils/formatter"
+import { formatMarketCap, formatPrice } from "../utils/formatter"
 import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts"
 
  const CoinDetail = () => {
@@ -150,7 +150,7 @@ import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAx
                                     border: "1px solid rgba(255, 255, 255, 0.1)",
                                     borderRadius: "8px",
                                     color: "#e0e0e0",
-                                    
+
                                 }} />
 
                                 <Line
@@ -163,8 +163,52 @@ import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAx
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
+
+                    <div className="stats-grid">
+                        <div className="stat-card">
+                            <span className="stat-label">
+                                Market cap
+                            </span>
+                            <span className="stat-value">
+                                ${formatMarketCap(coin.market_data.market_cap.usd)}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="stats-grid">
+                        <div className="stat-card">
+                            <span className="stat-label">
+                                Volume
+                            </span>
+                            <span className="stat-value">
+                                ${formatMarketCap(coin.market_data.total_volume.usd)}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="stats-grid">
+                        <div className="stat-card">
+                            <span className="stat-label">
+                                Circulating Supply
+                            </span>
+                            <span className="stat-value">
+                                {formatMarketCap(coin.market_data.circulating_supply?.toLocaleString() || "N/A")}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="stats-grid">
+                        <div className="stat-card">
+                            <span className="stat-label">
+                                Total Supply
+                            </span>
+                            <span className="stat-value">
+                                {formatMarketCap(coin.market_data.total_supply?.toLocaleString() || "N/A")}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
+        <footer className="footer">
+            <p>Data provided by CoinGecko API</p>
+        </footer>   
         </div>
     )
 }
