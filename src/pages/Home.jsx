@@ -14,7 +14,7 @@ const Home = () => {
 
    useEffect(() => {
     fetchCryptoData()
-   })
+   }, [])
    
     useEffect(() => {
     filterAndSort()

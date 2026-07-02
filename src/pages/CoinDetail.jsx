@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react"
-import { useNavigate, useParams,  } from "react-router"
-import { fetchCoinData } from "../services/CoinGecko"
+import { useNavigate, useParams,  } from "react-router-dom"
+import { fetchChartData, fetchCoinData } from "../services/CoinGecko"
 import { formatPrice } from "../utils/formatter"
+import {CartesianGrid, LineChart, ResponsiveContainer} from "recharts"
 
  const CoinDetail = () => {
      
     const { id } = useParams()
     const navigate = useNavigate()
-    const [coin, setCoin] = useState(null)
+    const [coin, setCoin] = useState(null)                  
+    const [chartData, setChartData] = useState([])
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        loadCoindData()
+
+
+        loadCoinData()
+        loadChartData()
     }, [id])
 
-    const loadCoindData = async () => {
+
+    const loadCoinData = async () => {
          try {
               const data = await fetchCoinData(id)
               setCoin(data)
@@ -25,6 +31,24 @@ import { formatPrice } from "../utils/formatter"
             }
     }
 
+    const loadChartData = async () => {
+         try {
+              const data = await fetchChartData(id)
+              const formattedData = data.prices.map((price) => ({
+                time: new Date(price[0]).toLocaleDate("en-US", {
+                    month: "short",
+                    day: "numeric"
+                }),
+                price: price[1].toFixed(2),
+              }))
+              setChartData(formattedData)
+            } catch (err) {
+              console.error("Error fetching crypto:", err)
+            } finally {
+              setIsLoading(false)
+            }
+    }
+    
 
         if(isLoading) {
         return (
@@ -99,6 +123,17 @@ import { formatPrice } from "../utils/formatter"
                             <span className="range-label">24h Low</span>
                             <span className="range-value">{formatPrice(coin.market_data.low_24h.usd)}</span>
                         </div>
+                    </div>
+                </div>
+                <div>
+
+                    <div className="chart-section">
+                        <h3>Price chart (7 Days)</h3>
+                        <ResponsiveContainer width="100%" height={400}>
+                            <LineChart data={chartData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                            </LineChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
             </div>
