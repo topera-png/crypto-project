@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams,  } from "react-router-dom"
 import { fetchChartData, fetchCoinData } from "../services/CoinGecko"
 import { formatPrice } from "../utils/formatter"
-import {CartesianGrid, LineChart, ResponsiveContainer} from "recharts"
+import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts"
 
  const CoinDetail = () => {
      
@@ -35,7 +35,7 @@ import {CartesianGrid, LineChart, ResponsiveContainer} from "recharts"
          try {
               const data = await fetchChartData(id)
               const formattedData = data.prices.map((price) => ({
-                time: new Date(price[0]).toLocaleDate("en-US", {
+                time: new Date(price[0]).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric"
                 }),
@@ -131,7 +131,35 @@ import {CartesianGrid, LineChart, ResponsiveContainer} from "recharts"
                         <h3>Price chart (7 Days)</h3>
                         <ResponsiveContainer width="100%" height={400}>
                             <LineChart data={chartData}>
-                                <CartesianGrid strokeDasharray="3 3" />
+                                <CartesianGrid 
+                                    strokeDasharray="3 3" 
+                                    stroke="rgba(255, 255, 255, 0.52)"/>
+
+                                <XAxis 
+                                    dataKey="time"
+                                    stroke="#9ca3af"
+                                    style={{fontSize: "12px"}}
+                                />
+                                <YAxis 
+                                    stroke="#9ca3af"
+                                    style={{fontSize: "12px"}}
+                                    domain={["auto", "auto"]}
+                                />
+                                <Tooltip contentStyle={{
+                                    backgroundColor: "rgb(20, 20, 40)",
+                                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                                    borderRadius: "8px",
+                                    color: "#e0e0e0",
+                                    
+                                }} />
+
+                                <Line
+                                    dataKey="price"
+                                    type="monotone"
+                                    stroke="#ADD8E6"
+                                    strokeWidth={2}
+                                    dot={false}
+                                />
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
